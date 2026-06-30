@@ -928,28 +928,34 @@
       --fgap: clamp(2.5rem, 7vw, 5.5rem);
       position: relative;
       z-index: 2;
+      /* padding-top (not a child margin) so this block butts directly against
+         the bus above — a child margin-top would collapse through and open a
+         gap between the bus end and the rail below. */
+      padding-top: clamp(2.5rem, 5vw, 4rem);
       padding-bottom: clamp(3rem, 6vw, 5rem);
     }
-    /* vertical fade-out line continuing the bus, dissolving to transparent */
+    /* vertical fade-out line continuing the bus, dissolving to transparent.
+       Starts a hair above the block top so it visually overlaps the bus's
+       last pixel — no seam between the career bus and this rail. */
     .future__rail {
       position: absolute;
       left: 50%;
-      top: 0;
+      top: -3px;
       transform: translateX(-50%);
-      width: 2px;
-      height: clamp(160px, 21vw, 240px);
+      width: 2.2px;
+      height: clamp(200px, 24vw, 280px);
       background: linear-gradient(to bottom,
-        rgba(138, 240, 255, 0.9) 0%,
-        rgba(43, 212, 230, 0.5) 28%,
+        #8af0ff 0%,
+        rgba(138, 240, 255, 0.9) 10%,
+        rgba(43, 212, 230, 0.5) 34%,
         rgba(43, 212, 230, 0) 100%);
-      box-shadow: 0 0 9px rgba(43, 212, 230, 0.5);
+      box-shadow: 0 0 10px rgba(43, 212, 230, 0.6);
       pointer-events: none;
     }
     .future__node {
       position: relative;
       box-sizing: border-box;
       width: 50%;
-      margin-top: clamp(2.5rem, 5vw, 4rem);
       padding-right: var(--fgap);
     }
     /* dashed, dimmed horizontal connector from the bus centre out to the chip
@@ -978,6 +984,15 @@
       display: flex;
       flex-direction: column;
       gap: 0.4rem;
+      /* whole-chip glitch burst ~once every 1.5s (rest state holds 0.5 opacity) */
+      animation: future-glitch-block 1.5s steps(1, jump-none) infinite;
+    }
+    @keyframes future-glitch-block {
+      0%, 84%, 100% { transform: translate(0, 0) skewX(0); opacity: 0.5; clip-path: none; }
+      86% { transform: translate(-2.5px, 1px) skewX(-0.7deg); opacity: 0.78; clip-path: inset(0 0 62% 0); }
+      89% { transform: translate(2.5px, -1px) skewX(0.5deg); opacity: 0.38; clip-path: inset(45% 0 18% 0); }
+      92% { transform: translate(-1.5px, 0) skewX(-0.3deg); opacity: 0.7; clip-path: inset(74% 0 0 0); }
+      95% { transform: translate(1px, 0); opacity: 0.5; clip-path: none; }
     }
     .future__status {
       font-family: var(--font-mono);
@@ -1008,22 +1023,23 @@
     }
     .future__title::before {
       color: var(--cyan);
-      animation: future-glitch-a 3.2s steps(2, jump-none) infinite;
+      animation: future-glitch-a 1.5s steps(2, jump-none) infinite;
     }
     .future__title::after {
       color: #ff5577;
-      animation: future-glitch-b 2.7s steps(2, jump-none) infinite;
+      animation: future-glitch-b 1.5s steps(2, jump-none) infinite;
     }
     @keyframes future-glitch-a {
-      0%, 82%, 100% { opacity: 0; transform: translate(0, 0); clip-path: inset(0 0 100% 0); }
-      84% { opacity: 0.8; transform: translate(-1.5px, 0); clip-path: inset(0 0 58% 0); }
-      88% { opacity: 0.8; transform: translate(1.5px, 0); clip-path: inset(42% 0 22% 0); }
-      92% { opacity: 0.7; transform: translate(-1px, 0); clip-path: inset(72% 0 0 0); }
+      0%, 84%, 100% { opacity: 0; transform: translate(0, 0); clip-path: inset(0 0 100% 0); }
+      86% { opacity: 0.85; transform: translate(-2px, 0); clip-path: inset(0 0 58% 0); }
+      90% { opacity: 0.85; transform: translate(2px, 0); clip-path: inset(42% 0 22% 0); }
+      94% { opacity: 0.75; transform: translate(-1px, 0); clip-path: inset(72% 0 0 0); }
     }
     @keyframes future-glitch-b {
-      0%, 80%, 100% { opacity: 0; transform: translate(0, 0); clip-path: inset(0 0 100% 0); }
-      85% { opacity: 0.7; transform: translate(1.5px, 0); clip-path: inset(22% 0 60% 0); }
-      90% { opacity: 0.7; transform: translate(-1.5px, 0); clip-path: inset(62% 0 12% 0); }
+      0%, 85%, 100% { opacity: 0; transform: translate(0, 0); clip-path: inset(0 0 100% 0); }
+      87% { opacity: 0.75; transform: translate(2px, 0); clip-path: inset(22% 0 60% 0); }
+      91% { opacity: 0.75; transform: translate(-2px, 0); clip-path: inset(62% 0 12% 0); }
+      95% { opacity: 0.7; transform: translate(1px, 0); clip-path: inset(80% 0 4% 0); }
     }
     .future__cursor {
       display: inline-block;
@@ -1286,6 +1302,9 @@
       letter-spacing: 0.02em;
     }
     .footer__links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
       color: var(--text);
       font-weight: 500;
       padding-bottom: 4px;
@@ -1296,6 +1315,15 @@
       color: var(--azure);
       border-color: var(--azure);
     }
+    .footer__logo {
+      width: clamp(20px, 2.2vw, 26px);
+      height: clamp(20px, 2.2vw, 26px);
+      object-fit: contain;
+      border-radius: 5px;
+      flex: none;
+      transition: transform 0.2s ease;
+    }
+    .footer__links a:hover .footer__logo { transform: translateY(-1px); }
 
     /* ================================================================
        Scroll reveal
@@ -1382,7 +1410,7 @@
           <p class="hero__meta"><strong>Warsaw, PL</strong> · Open to hybrid or remote</p>
           <ul class="hero__cta">
             <li>
-              <a href="CV_Dominik_Kulinski_Devops_2026.pdf" download class="cta cta--primary" aria-label="Download CV PDF">
+              <a href="assets/CV_Dominik_Kulinski_Devops_2026.pdf" download class="cta cta--primary" aria-label="Download CV PDF">
                 Download CV
               </a>
             </li>
@@ -1508,7 +1536,7 @@
       </div>
       <div class="whoami__layout reveal">
         <figure class="whoami__photo">
-          <img src="1.jpg" alt="Portrait of Dominik Kuliński" loading="lazy" />
+          <img src="assets/1.jpg" alt="Portrait of Dominik Kuliński" loading="lazy" />
           <figcaption class="whoami__caption">// ~/dominik.jpg</figcaption>
         </figure>
         <div class="whoami__body">
@@ -1527,14 +1555,27 @@
   <footer class="footer">
     <div class="container">
       <ul class="footer__links">
-        <li><a href="CV_Dominik_Kulinski_Devops_2026.pdf" download>CV</a></li>
-        <li><a href="mailto:dkulinski2000@gmail.com">email</a></li>
+        <li>
+          <a href="assets/CV_Dominik_Kulinski_Devops_2026.pdf" download>
+            <img class="footer__logo" src="assets/icons/cv.png" alt="" aria-hidden="true" width="22" height="22" />
+            <span>CV</span>
+          </a>
+        </li>
+        <li>
+          <a href="mailto:dkulinski2000@gmail.com">
+            <img class="footer__logo" src="assets/icons/email.png" alt="" aria-hidden="true" width="22" height="22" />
+            <span>email</span>
+          </a>
+        </li>
         <li>
           <a
             href="https://www.linkedin.com/in/dominik-kuli%C5%84ski-4b3356209/"
             rel="noopener"
             target="_blank"
-          >LinkedIn</a>
+          >
+            <img class="footer__logo" src="assets/icons/linkedin.png" alt="" aria-hidden="true" width="22" height="22" />
+            <span>LinkedIn</span>
+          </a>
         </li>
       </ul>
     </div>
