@@ -17,7 +17,10 @@
       "Bash(echo \"exit=$?\")",
       "Bash(\"/c/Program Files \\(x86\\)/Microsoft/Edge/Application/msedge.exe\" --headless=new --disable-gpu --virtual-time-budget=2500 --dump-dom \"file:///C:/Users/Saya/Desktop/Repos/portfolio/index.html\")",
       "Bash(\"/c/Program Files \\(x86\\)/Microsoft/Edge/Application/msedge.exe\" --headless=new --disable-gpu --window-size=1440,900 --screenshot=__hero_1440.png \"index.html\")",
-      "Bash(ls -la __hero_1440.png)"
+      "Bash(ls -la __hero_1440.png)",
+      "Bash('/c/Program Files \\(x86\\)/Microsoft/Edge/Application/msedge.exe' --headless=new --disable-gpu --hide-scrollbars --window-size=1440,900 --virtual-time-budget=4500 --user-data-dir=C:/Users/Saya/AppData/Local/Temp/edge_vf --screenshot=C:/Users/Saya/AppData/Local/Temp/v_future.png 'file:///C:/Users/Saya/Desktop/Repos/portfolio/index.html?only=future')",
+      "Bash('/c/Program Files \\(x86\\)/Microsoft/Edge/Application/msedge.exe' --headless=new --disable-gpu --hide-scrollbars --window-size=1440,1000 --virtual-time-budget=4500 --user-data-dir=C:/Users/Saya/AppData/Local/Temp/edge_vs --screenshot=C:/Users/Saya/AppData/Local/Temp/v_stack.png 'file:///C:/Users/Saya/Desktop/Repos/portfolio/index.html?only=stack')",
+      "Bash('/c/Program Files \\(x86\\)/Microsoft/Edge/Application/msedge.exe' --headless=new --disable-gpu --hide-scrollbars --window-size=430,820 --virtual-time-budget=4500 --user-data-dir=C:/Users/Saya/AppData/Local/Temp/edge_vfm --screenshot=C:/Users/Saya/AppData/Local/Temp/v_future_m.png 'file:///C:/Users/Saya/Desktop/Repos/portfolio/index.html?only=future')"
     ]
   }
 }

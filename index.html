@@ -6,7 +6,6 @@
   <meta name="theme-color" content="#0b1220" />
   <meta name="description" content="Dominik Kuliński — DevOps / SRE. Personal portfolio." />
   <title>Dominik Kuliński — DevOps / SRE</title>
-
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -950,15 +949,15 @@
       position: relative;
       box-sizing: border-box;
       width: 50%;
-      margin-left: 50%;
       margin-top: clamp(2.5rem, 5vw, 4rem);
-      padding-left: var(--fgap);
+      padding-right: var(--fgap);
     }
-    /* dashed, dimmed horizontal connector from the bus centre to the chip */
+    /* dashed, dimmed horizontal connector from the bus centre out to the chip
+       on the left (card right edge ↔ centre rail) */
     .future__node::before {
       content: '';
       position: absolute;
-      left: 0;
+      right: 0;
       top: 50%;
       width: var(--fgap);
       border-top: 1.5px dashed var(--gold);
@@ -969,6 +968,7 @@
     .future__card {
       width: 100%;
       max-width: 380px;
+      margin-left: auto;
       padding: 1.05rem 1.25rem;
       border: 1.5px dashed var(--gold);
       border-radius: 4px;
@@ -1040,10 +1040,11 @@
       .future__rail { left: 32px; transform: none; }
       .future__node {
         width: 100%;
-        margin-left: 0;
         padding-left: 56px;
+        padding-right: 0;
       }
-      .future__node::before { left: 32px; width: 24px; }
+      .future__node::before { left: 32px; right: auto; width: 24px; }
+      .future__card { margin-left: 0; }
     }
 
     /* ================================================================
@@ -1076,8 +1077,10 @@
       border-radius: 2px;
     }
     .stack__legend-item--expert::before { background: var(--green); }
+    .stack__legend-item--advanced::before { background: var(--azure); }
     .stack__legend-item--proficient::before { background: var(--cyan); }
     .stack__legend-item--working::before { background: var(--gold); }
+    .stack__legend-item b { color: var(--text); font-weight: 500; }
 
     .stack__list {
       display: flex;
@@ -1133,6 +1136,7 @@
       white-space: nowrap;
     }
     .stack-item__level--expert { color: var(--green); }
+    .stack-item__level--advanced { color: var(--azure); }
     .stack-item__level--proficient { color: var(--cyan); }
     .stack-item__level--working { color: var(--gold); }
 
@@ -1486,9 +1490,10 @@
         <h2 class="section__heading">Tools I reach for, day to day.</h2>
       </div>
       <p class="stack__legend reveal" aria-hidden="true">
-        <span class="stack__legend-item stack__legend-item--expert">expert</span>
-        <span class="stack__legend-item stack__legend-item--proficient">proficient</span>
-        <span class="stack__legend-item stack__legend-item--working">working</span>
+        <span class="stack__legend-item stack__legend-item--expert"><b>expert</b> — second nature</span>
+        <span class="stack__legend-item stack__legend-item--advanced"><b>advanced</b> — deep, minor gaps</span>
+        <span class="stack__legend-item stack__legend-item--proficient"><b>proficient</b> — solid, gets it done</span>
+        <span class="stack__legend-item stack__legend-item--working"><b>working</b> — newer, production-capable</span>
       </p>
       <ul class="stack__list reveal" id="stackList"></ul>
     </div>
@@ -1753,29 +1758,28 @@
           feel: "While the core concept of Kubernetes isn’t new to me, AKS itself is. Despite the new overlay and the features natively integrated into Azure, I am able to navigate efficiently through both the cluster and the Azure portal."
         },
         {
+          name: 'Docker',
+          level: 'advanced',
+          experience: 'Image builds for CA, ASE, AKS workloads.',
+          feel: 'I am proficient with Docker, comfortably handling core commands, along with the vast majority of its core functionality.'
+        },
+        {
+          name: 'Azure Monitor + KQL',
+          level: 'advanced',
+          experience: 'Custom dashboards, KQL queries across AKS logs and App Insights, alert rules wired to action groups.',
+          feel: 'I write KQL fluently for AKS logs, App Insights and Service Bus — alerts, dashboards and workbooks that pull data across App Services, containers and AKS. I lean on AI to optimise the gnarlier cross-table joins.'
+        },
+        {
           name: 'Bicep',
           level: 'proficient',
           experience: 'I mainly used pre-built modules created by others, but there was frequently a need to modify them, which I handled without any issues. I have repeatedly built new environments and modified existing ones using Bicep.',
           feel: "I feel confident and can efficiently navigate Bicep modules. I fully grasp the 'what-if' concept and the underlying theory of ARM state management. Although I am capable and get the job done, I still recognize a slight knowledge gap regarding the deeper structure and the overall workflow of Bicep."
-        },
-
-        {
-          name: 'Azure Monitor + KQL',
-          level: 'proficient',
-          experience: 'Custom dashboards, KQL queries across AKS logs and App Insights, alert rules wired to action groups.',
-          feel: 'I write KQL fluently for AKS logs, App Insights and Service Bus — alerts, dashboards and workbooks that pull data across App Services, containers and AKS. I lean on AI to optimise the gnarlier cross-table joins.'
         },
         {
           name: 'PowerShell / Bash',
           level: 'proficient',
           experience: 'Operational automation, Azure CLI orchestration, deployment helpers, one-off cluster forensics.',
           feel: "I ship production PowerShell for Azure CLI orchestration and deployment helpers. I won't write a script from scratch out of memory, but I know the end goal, the execution path, and where each piece needs to land, AI fills the gaps."
-        },
-        {
-          name: 'Docker',
-          level: 'proficient',
-          experience: 'Image builds for CA, ASE, AKS workloads.',
-          feel: 'I am proficient with Docker, comfortably handling core commands, along with the vast majority of its core functionality.'
         },
         {
           name: 'Trivy',
