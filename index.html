@@ -919,6 +919,41 @@
       letter-spacing: 0.04em;
     }
 
+    /* verify link — sits at the bottom of a cert card's expanded block */
+    .node__verify-row {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-top: 0.2rem;
+      padding-top: 0.7rem;
+      border-top: 1px solid var(--line);
+    }
+    .node--left .node__verify-row { justify-content: flex-end; }
+    .node__verify {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      color: var(--green);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s ease, color 0.2s ease;
+    }
+    .node__verify::after {
+      content: " \2197";
+      font-size: 11px;
+    }
+    .node__verify:hover,
+    .node__verify:focus-visible { border-bottom-color: currentColor; }
+    .node__verify-code {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+      padding: 0.1rem 0.4rem;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+    }
+
     /* ================================================================
        Future milestone — the bus fades out into a "next objective" ghost
        chip. Sits just below the timeline; the centred rail continues the
@@ -1650,6 +1685,7 @@
         {
           kind: 'cert',
           title: 'CompTIA Security+ ce',
+          verify: { url: 'https://www.credly.com/badges/57e1163b-6420-43f1-936b-8fef3bc7839d/linked_in' },
           org: '@ CompTIA',
           year: '2024-07',
           scope: 'Broad security baseline — crypto, identity, network defence, incident response, risk.',
@@ -1668,6 +1704,7 @@
         {
           kind: 'cert',
           title: 'AZ-900',
+          verify: { url: 'https://learn.microsoft.com/en-us/users/dominikkuliski-3198/credentials/bd11a5518eb92403?ref=https%3A%2F%2Fwww.credly.com%2F' },
           org: '@ Microsoft · Azure Fundamentals',
           year: '2025-06',
           scope: 'Azure as a coherent system — services, billing, identity, regions, shared responsibility.',
@@ -1677,6 +1714,7 @@
         {
           kind: 'cert',
           title: 'AZ-104',
+          verify: { url: 'https://learn.microsoft.com/api/credentials/share/en-us/DominikKuliski-3198/63B5AF917D83F8B6?sharingId=E60A079D0720A12D' },
           org: '@ Microsoft · Azure Administrator Associate',
           year: '2025-09',
           scope: 'Administering Azure - VNets, NSGs, peering, identity, storage, backups, monitoring.',
@@ -1704,6 +1742,7 @@
         {
           kind: 'cert',
           title: 'CKA',
+          verify: { url: 'https://training.linuxfoundation.org/certification/verify/', code: 'LF-qabbw3gb3z' },
           org: '@ Linux Foundation · Kubernetes & Cloud Native Associate',
           year: '2026-01',
           scope: 'Live-cluster troubleshooting - RBAC, scheduling, networking, etcd, lifecycle.',
@@ -1723,6 +1762,7 @@
         {
           kind: 'cert',
           title: 'CKAD',
+          verify: { url: 'https://training.linuxfoundation.org/certification/verify/', code: 'LF-qgdr5xkbmq' },
           org: '@ Linux Foundation · K8s Application Developer',
           year: '2026-03',
           scope: 'Developer side of K8s - ConfigMaps, secrets, probes, jobs, multi-container patterns.',
@@ -1732,6 +1772,7 @@
         {
           kind: 'cert',
           title: 'CKS',
+          verify: { url: 'https://training.linuxfoundation.org/certification/verify/', code: 'LF-0ah6ytcbg8' },
           org: '@ Linux Foundation · K8s Security Specialist',
           year: '2026-05',
           scope: 'PodSecurity, network policies, image scanning, runtime detection, Falco.',
@@ -1741,6 +1782,7 @@
         {
           kind: 'cert',
           title: 'KCNA',
+          verify: { url: 'https://training.linuxfoundation.org/certification/verify/', code: 'LF-p2wdercih7' },
           org: '@ Linux Foundation · Kubernetes & Cloud Native Associate',
           year: '2026-05',
           scope: 'Cloud Native Architecture, Kubernetes Fundamentals, Orchestration, GitOps, Observability.',
@@ -1750,6 +1792,7 @@
           {
           kind: 'cert',
           title: 'KCSA',
+          verify: { url: 'https://training.linuxfoundation.org/certification/verify/', code: 'LF-sur1yfkkdb' },
           org: '@ Linux Foundation · Kubernetes & Cloud Native Security Associate',
           year: '2026-05',
           scope: 'Cloud Native Security Baseline, Compliance & Governance, Threat Modeling, Supply Chain Security, Network & Transport Security.',
@@ -1768,6 +1811,7 @@
         {
           kind: 'cert',
           title: 'AZ-500',
+          verify: { url: 'https://learn.microsoft.com/en-us/users/dominikkuliski-3198/credentials/1923369fc34cdb9b?ref=https%3A%2F%2Fwww.linkedin.com%2F' },
           org: '@ Microsoft',
           year: '2026-06',
           scope: 'Identity and Access Management, Infrastructure Protection, Security Operations, Data and Application Protection.',
@@ -1914,6 +1958,10 @@
                   <span class="node__label">// reflection</span>
                   <span class="node__text node__text--reflection">${formatReflection(n.reflection)}</span>
                 </div>
+                ${n.verify ? `<div class="node__verify-row">
+                  <a class="node__verify" href="${escapeHtml(n.verify.url)}" target="_blank" rel="noopener noreferrer">verify</a>
+                  ${n.verify.code ? `<span class="node__verify-code">${escapeHtml(n.verify.code)}</span>` : ''}
+                </div>` : ''}
               </div>
             </div>
           </div>
