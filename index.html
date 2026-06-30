@@ -928,28 +928,34 @@
       --fgap: clamp(2.5rem, 7vw, 5.5rem);
       position: relative;
       z-index: 2;
+      /* padding-top (not a child margin) so this block butts directly against
+         the bus above — a child margin-top would collapse through and open a
+         gap between the bus end and the rail below. */
+      padding-top: clamp(2.5rem, 5vw, 4rem);
       padding-bottom: clamp(3rem, 6vw, 5rem);
     }
-    /* vertical fade-out line continuing the bus, dissolving to transparent */
+    /* vertical fade-out line continuing the bus, dissolving to transparent.
+       Starts a hair above the block top so it visually overlaps the bus's
+       last pixel — no seam between the career bus and this rail. */
     .future__rail {
       position: absolute;
       left: 50%;
-      top: 0;
+      top: -3px;
       transform: translateX(-50%);
-      width: 2px;
-      height: clamp(160px, 21vw, 240px);
+      width: 2.2px;
+      height: clamp(200px, 24vw, 280px);
       background: linear-gradient(to bottom,
-        rgba(138, 240, 255, 0.9) 0%,
-        rgba(43, 212, 230, 0.5) 28%,
+        #8af0ff 0%,
+        rgba(138, 240, 255, 0.9) 10%,
+        rgba(43, 212, 230, 0.5) 34%,
         rgba(43, 212, 230, 0) 100%);
-      box-shadow: 0 0 9px rgba(43, 212, 230, 0.5);
+      box-shadow: 0 0 10px rgba(43, 212, 230, 0.6);
       pointer-events: none;
     }
     .future__node {
       position: relative;
       box-sizing: border-box;
       width: 50%;
-      margin-top: clamp(2.5rem, 5vw, 4rem);
       padding-right: var(--fgap);
     }
     /* dashed, dimmed horizontal connector from the bus centre out to the chip
@@ -978,6 +984,15 @@
       display: flex;
       flex-direction: column;
       gap: 0.4rem;
+      /* whole-chip glitch burst ~once every 1.5s (rest state holds 0.5 opacity) */
+      animation: future-glitch-block 1.5s steps(1, jump-none) infinite;
+    }
+    @keyframes future-glitch-block {
+      0%, 84%, 100% { transform: translate(0, 0) skewX(0); opacity: 0.5; clip-path: none; }
+      86% { transform: translate(-2.5px, 1px) skewX(-0.7deg); opacity: 0.78; clip-path: inset(0 0 62% 0); }
+      89% { transform: translate(2.5px, -1px) skewX(0.5deg); opacity: 0.38; clip-path: inset(45% 0 18% 0); }
+      92% { transform: translate(-1.5px, 0) skewX(-0.3deg); opacity: 0.7; clip-path: inset(74% 0 0 0); }
+      95% { transform: translate(1px, 0); opacity: 0.5; clip-path: none; }
     }
     .future__status {
       font-family: var(--font-mono);
@@ -1008,22 +1023,23 @@
     }
     .future__title::before {
       color: var(--cyan);
-      animation: future-glitch-a 3.2s steps(2, jump-none) infinite;
+      animation: future-glitch-a 1.5s steps(2, jump-none) infinite;
     }
     .future__title::after {
       color: #ff5577;
-      animation: future-glitch-b 2.7s steps(2, jump-none) infinite;
+      animation: future-glitch-b 1.5s steps(2, jump-none) infinite;
     }
     @keyframes future-glitch-a {
-      0%, 82%, 100% { opacity: 0; transform: translate(0, 0); clip-path: inset(0 0 100% 0); }
-      84% { opacity: 0.8; transform: translate(-1.5px, 0); clip-path: inset(0 0 58% 0); }
-      88% { opacity: 0.8; transform: translate(1.5px, 0); clip-path: inset(42% 0 22% 0); }
-      92% { opacity: 0.7; transform: translate(-1px, 0); clip-path: inset(72% 0 0 0); }
+      0%, 84%, 100% { opacity: 0; transform: translate(0, 0); clip-path: inset(0 0 100% 0); }
+      86% { opacity: 0.85; transform: translate(-2px, 0); clip-path: inset(0 0 58% 0); }
+      90% { opacity: 0.85; transform: translate(2px, 0); clip-path: inset(42% 0 22% 0); }
+      94% { opacity: 0.75; transform: translate(-1px, 0); clip-path: inset(72% 0 0 0); }
     }
     @keyframes future-glitch-b {
-      0%, 80%, 100% { opacity: 0; transform: translate(0, 0); clip-path: inset(0 0 100% 0); }
-      85% { opacity: 0.7; transform: translate(1.5px, 0); clip-path: inset(22% 0 60% 0); }
-      90% { opacity: 0.7; transform: translate(-1.5px, 0); clip-path: inset(62% 0 12% 0); }
+      0%, 85%, 100% { opacity: 0; transform: translate(0, 0); clip-path: inset(0 0 100% 0); }
+      87% { opacity: 0.75; transform: translate(2px, 0); clip-path: inset(22% 0 60% 0); }
+      91% { opacity: 0.75; transform: translate(-2px, 0); clip-path: inset(62% 0 12% 0); }
+      95% { opacity: 0.7; transform: translate(1px, 0); clip-path: inset(80% 0 4% 0); }
     }
     .future__cursor {
       display: inline-block;
@@ -1286,6 +1302,9 @@
       letter-spacing: 0.02em;
     }
     .footer__links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
       color: var(--text);
       font-weight: 500;
       padding-bottom: 4px;
@@ -1296,6 +1315,15 @@
       color: var(--azure);
       border-color: var(--azure);
     }
+    .footer__logo {
+      width: clamp(20px, 2.2vw, 26px);
+      height: clamp(20px, 2.2vw, 26px);
+      object-fit: contain;
+      border-radius: 5px;
+      flex: none;
+      transition: transform 0.2s ease;
+    }
+    .footer__links a:hover .footer__logo { transform: translateY(-1px); }
 
     /* ================================================================
        Scroll reveal
@@ -1382,7 +1410,7 @@
           <p class="hero__meta"><strong>Warsaw, PL</strong> · Open to hybrid or remote</p>
           <ul class="hero__cta">
             <li>
-              <a href="CV_Dominik_Kulinski_Devops_2026.pdf" download class="cta cta--primary" aria-label="Download CV PDF">
+              <a href="assets/CV_Dominik_Kulinski_Devops_2026.pdf" download class="cta cta--primary" aria-label="Download CV PDF">
                 Download CV
               </a>
             </li>
@@ -1508,7 +1536,7 @@
       </div>
       <div class="whoami__layout reveal">
         <figure class="whoami__photo">
-          <img src="1.jpg" alt="Portrait of Dominik Kuliński" loading="lazy" />
+          <img src="assets/1.jpg" alt="Portrait of Dominik Kuliński" loading="lazy" />
           <figcaption class="whoami__caption">// ~/dominik.jpg</figcaption>
         </figure>
         <div class="whoami__body">
@@ -1527,14 +1555,27 @@
   <footer class="footer">
     <div class="container">
       <ul class="footer__links">
-        <li><a href="CV_Dominik_Kulinski_Devops_2026.pdf" download>CV</a></li>
-        <li><a href="mailto:dkulinski2000@gmail.com">email</a></li>
+        <li>
+          <a href="assets/CV_Dominik_Kulinski_Devops_2026.pdf" download>
+            <img class="footer__logo" src="assets/icons/cv.png" alt="" aria-hidden="true" width="22" height="22" />
+            <span>CV</span>
+          </a>
+        </li>
+        <li>
+          <a href="mailto:dkulinski2000@gmail.com">
+            <img class="footer__logo" src="assets/icons/email.png" alt="" aria-hidden="true" width="22" height="22" />
+            <span>email</span>
+          </a>
+        </li>
         <li>
           <a
             href="https://www.linkedin.com/in/dominik-kuli%C5%84ski-4b3356209/"
             rel="noopener"
             target="_blank"
-          >LinkedIn</a>
+          >
+            <img class="footer__logo" src="assets/icons/linkedin.png" alt="" aria-hidden="true" width="22" height="22" />
+            <span>LinkedIn</span>
+          </a>
         </li>
       </ul>
     </div>
@@ -1742,20 +1783,20 @@
         {
           name: 'Azure',
           level: 'expert',
-          experience: 'Five years across the portal, CLI, ARM and increasingly Bicep. App Services, Container Apps, AKS, SQL, Key Vault, App Insights + Monitor, VNet, Service Bus, Application Gateway, ACR.',
-          feel: "Highly confident in Azure - years of daily portal, CLI and docs work. I haven't touched every Azure feature yet, but I can move through the documentation fluently and lean on AI for the long-tail edge cases. Pragmatic by default — solutions that fit the project, not idealised, over-engineered ones unless required."
+          experience: 'Five years across the portal, CLI, ARM and increasingly Bicep. Experienced with App Services, Container Apps, AKS, SQL, Key Vault, App Insights + Monitor, VNet, Service Bus, Application Gateway, Front Door, ACR.',
+          feel: "Highly confident in Azure - years of daily portal, CLI and docs work. I haven't touched every Azure feature yet, but I can move through the documentation fluently. Pragmatic by default — solutions that fit the project, not idealised, over-engineered ones unless required."
         },
         {
           name: 'Azure DevOps',
           level: 'expert',
-          experience: 'CI/CD pipelines for .NET and Python services. Classic + YAML pipelines, service connections, artifact feeds, agent pools.',
+          experience: 'CI/CD pipelines for .NET (50+ pipelines) and Python services. Experienced with classic YAML pipelines, service connections, artifact feeds, agent pools and project settings from RBAC and Security site.',
           feel: 'Much like the Azure Portal, I have been using Azure DevOps daily for years to manage repositories, configure security, build pipelines, and handle the full spectrum of day-to-day DevOps operations.'
         },
         {
           name: 'Kubernetes / AKS',
           level: 'advanced',
           experience: 'Cluster admin on multi-tenant AKS - node pools, autoscaling, RBAC, upgrades, application lifecycle, gitops',
-          feel: "While the core concept of Kubernetes isn’t new to me, AKS itself is. Despite the new overlay and the features natively integrated into Azure, I am able to navigate efficiently through both the cluster and the Azure portal."
+          feel: "While the core concept of Kubernetes isn't new to me, AKS itself is. Despite the new overlay and the features natively integrated into Azure, I am able to navigate efficiently through both the cluster and the Azure portal."
         },
         {
           name: 'Docker',
@@ -1766,14 +1807,20 @@
         {
           name: 'Azure Monitor + KQL',
           level: 'advanced',
-          experience: 'Custom dashboards, KQL queries across AKS logs and App Insights, alert rules wired to action groups.',
-          feel: 'I write KQL fluently for AKS logs, App Insights and Service Bus — alerts, dashboards and workbooks that pull data across App Services, containers and AKS. I lean on AI to optimise the gnarlier cross-table joins.'
+          experience: 'Custom dashboards (10+), KQL queries across AKS logs and App Insights, alert rules wired to action groups (100+ finished queries with alerts).',
+          feel: 'I write KQL for AKS logs, App Insights and Service Bus - alerts, dashboards and workbooks that pull data across App Services, containers and AKS. I lean on AI to optimise harder queries or custom metrics.'
         },
         {
           name: 'Bicep',
           level: 'proficient',
           experience: 'I mainly used pre-built modules created by others, but there was frequently a need to modify them, which I handled without any issues. I have repeatedly built new environments and modified existing ones using Bicep.',
           feel: "I feel confident and can efficiently navigate Bicep modules. I fully grasp the 'what-if' concept and the underlying theory of ARM state management. Although I am capable and get the job done, I still recognize a slight knowledge gap regarding the deeper structure and the overall workflow of Bicep."
+        },
+        {
+          name: 'Git',
+          level: 'proficient',
+          experience: 'Comfortable with Git for everyday development tasks. Skilled in essential version control workflows and branch management.',
+          feel: "Solid grasp of standard workflows, my experience is focused on efficient daily operations rather than complex repository maintenance or advanced conflict resolution."
         },
         {
           name: 'PowerShell / Bash',
@@ -1788,10 +1835,28 @@
           feel: "I feel confident using Trivy. Having put it into practice, I know the tool inside out and can smoothly integrate it into any deployment pipeline to catch security risks early."
         },
         {
+          name: 'Teamcity / Octopus Deploy',
+          level: 'proficient',
+          experience: 'Built 50+ fully functional pipelines with integrated tests and static scanning for Azure App services / Container Apps / Linux on-premises environments.',
+          feel: "Didn't use TeamCity or Octopus deploy for about 2 years, since then I fully transisted to Azure Devops."
+        },
+        {
           name: 'FluxCD',
           level: 'working',
           experience: 'I only started using FluxCD in production in March 2026, but I had previously completed KodeKloud training on my own initiative. As a result, I am fully familiar with its core concepts, commands, and practical applications.',
-          feel: "While I don’t have extensive experience with this technology yet, I haven't encountered any major issues executing production tasks with FluxCD so far."
+          feel: "While I don't have extensive experience with this technology yet, I haven't encountered any major issues executing production tasks with FluxCD so far."
+        },
+        {
+          name: 'Python',
+          level: 'working',
+          experience: "I don't build complex application with it, but I am comfortable in using Python for task automation and system administration.",
+          feel: "I've never been Software Developer, so I don't have ability to write complex Python scripts or applications by myself, but I am very comfortable with using it for task automation."
+        },
+        {
+          name: 'Terraform',
+          level: 'working',
+          experience: 'Finished Terraform course which prepares for Terraform Associate and finished whole hands-on practice lab to learn Terraform. No production experience.',
+          feel: "I didn't use Terraform in production, but I grasp concepts of Terraform and have hands-on experience with it. I believe my experience with Bicep can translate easily into concepts of Terraform."
         }
       ]; 
 
