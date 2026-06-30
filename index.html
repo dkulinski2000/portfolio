@@ -145,6 +145,13 @@
 
     .hero__inner {
       max-width: 760px;
+      /* Widen the name block into the empty left gutter WITHOUT moving the
+         console: the grid track stays 380px (right column untouched); the
+         block overflows leftward by --name-grow, so its right edge — and the
+         gap to the console — are preserved while it grows wider + more left. */
+      --name-grow: clamp(0px, calc((100vw - var(--max-w)) / 2 - 4.5rem), 380px);
+      width: calc(380px + var(--name-grow));
+      margin-left: calc(-1 * var(--name-grow));
     }
 
     .hero__title { margin-bottom: 0.4rem; font-size: clamp(43px, 5.5vw, 70px); }
@@ -236,17 +243,21 @@
        feel) while the console sits on the right. */
     .hero .container {
       max-width: none;
-      padding-right: clamp(2rem, 4vw, 4rem);
+      padding-right: calc(clamp(2rem, 4vw, 4rem) - 13px);
       padding-left: max(var(--gutter), calc((100% - var(--max-w)) / 2 + var(--gutter) - 2.5rem));
     }
     .hero__grid {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) clamp(460px, 58vw, 880px);
+      grid-template-columns: minmax(0, 380px) minmax(0, 1fr);
       gap: clamp(2rem, 4vw, 4rem);
       align-items: center;
       width: 100%;
     }
-    .hero__console { min-width: 0; }
+    /* Console is capped and centered in its column; with the container's
+       right padding equal to the grid gap, the gap on the left of the
+       console (text → console) and on its right (console → screen edge)
+       stay equal at every width. */
+    .hero__console { min-width: 0; width: 100%; max-width: 880px; margin-inline: auto; }
     .hero__console-eyebrow {
       font-family: var(--font-mono);
       font-size: 12px;
@@ -910,6 +921,132 @@
     }
 
     /* ================================================================
+       Future milestone — the bus fades out into a "next objective" ghost
+       chip. Sits just below the timeline; the centred rail continues the
+       (now centre-ending) bus and dissolves to transparent.
+       ================================================================ */
+    .future {
+      --fgap: clamp(2.5rem, 7vw, 5.5rem);
+      position: relative;
+      z-index: 2;
+      padding-bottom: clamp(3rem, 6vw, 5rem);
+    }
+    /* vertical fade-out line continuing the bus, dissolving to transparent */
+    .future__rail {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+      width: 2px;
+      height: clamp(160px, 21vw, 240px);
+      background: linear-gradient(to bottom,
+        rgba(138, 240, 255, 0.9) 0%,
+        rgba(43, 212, 230, 0.5) 28%,
+        rgba(43, 212, 230, 0) 100%);
+      box-shadow: 0 0 9px rgba(43, 212, 230, 0.5);
+      pointer-events: none;
+    }
+    .future__node {
+      position: relative;
+      box-sizing: border-box;
+      width: 50%;
+      margin-left: 50%;
+      margin-top: clamp(2.5rem, 5vw, 4rem);
+      padding-left: var(--fgap);
+    }
+    /* dashed, dimmed horizontal connector from the bus centre to the chip */
+    .future__node::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: var(--fgap);
+      border-top: 1.5px dashed var(--gold);
+      opacity: 0.5;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+    .future__card {
+      width: 100%;
+      max-width: 380px;
+      padding: 1.05rem 1.25rem;
+      border: 1.5px dashed var(--gold);
+      border-radius: 4px;
+      background: linear-gradient(180deg, rgba(17, 26, 46, 0.65), rgba(14, 22, 38, 0.65));
+      box-shadow: 0 0 26px -12px var(--gold);
+      opacity: 0.5;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .future__status {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--cyan);
+      letter-spacing: 0.04em;
+      opacity: 0.9;
+      margin: 0;
+    }
+    .future__title {
+      position: relative;
+      font-family: var(--font-mono);
+      font-size: clamp(13px, 1.4vw, 15px);
+      color: var(--gold);
+      letter-spacing: 0.06em;
+      margin: 0;
+    }
+    /* two offset coloured copies flicker briefly — a subtle cyberpunk glitch */
+    .future__title::before,
+    .future__title::after {
+      content: attr(data-text);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .future__title::before {
+      color: var(--cyan);
+      animation: future-glitch-a 3.2s steps(2, jump-none) infinite;
+    }
+    .future__title::after {
+      color: #ff5577;
+      animation: future-glitch-b 2.7s steps(2, jump-none) infinite;
+    }
+    @keyframes future-glitch-a {
+      0%, 82%, 100% { opacity: 0; transform: translate(0, 0); clip-path: inset(0 0 100% 0); }
+      84% { opacity: 0.8; transform: translate(-1.5px, 0); clip-path: inset(0 0 58% 0); }
+      88% { opacity: 0.8; transform: translate(1.5px, 0); clip-path: inset(42% 0 22% 0); }
+      92% { opacity: 0.7; transform: translate(-1px, 0); clip-path: inset(72% 0 0 0); }
+    }
+    @keyframes future-glitch-b {
+      0%, 80%, 100% { opacity: 0; transform: translate(0, 0); clip-path: inset(0 0 100% 0); }
+      85% { opacity: 0.7; transform: translate(1.5px, 0); clip-path: inset(22% 0 60% 0); }
+      90% { opacity: 0.7; transform: translate(-1.5px, 0); clip-path: inset(62% 0 12% 0); }
+    }
+    .future__cursor {
+      display: inline-block;
+      margin-left: 0.15em;
+      color: var(--gold);
+      animation: future-blink 1.1s ease-in-out infinite;
+    }
+    @keyframes future-blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.25; }
+    }
+    /* match the bus's mobile breakpoint (720): rail moves to the left edge */
+    @media (max-width: 719px) {
+      .future__rail { left: 32px; transform: none; }
+      .future__node {
+        width: 100%;
+        margin-left: 0;
+        padding-left: 56px;
+      }
+      .future__node::before { left: 32px; width: 24px; }
+    }
+
+    /* ================================================================
        Stack (clickable accordion)
        ================================================================ */
     .stack {
@@ -1048,15 +1185,66 @@
     /* ================================================================
        Whoami
        ================================================================ */
+    .whoami__layout {
+      display: flex;
+      align-items: flex-start;
+      gap: clamp(1.5rem, 4vw, 3.25rem);
+    }
     .whoami__body {
       display: flex;
       flex-direction: column;
       gap: 1.1rem;
-      max-width: 65ch;
+      max-width: 60ch;
       color: var(--muted);
       font-size: clamp(15px, 1.3vw, 17px);
     }
     .whoami__body p strong { color: var(--text); font-weight: 500; }
+
+    /* tech-framed portrait: dark IC-chip surround + cyan corner viewfinder
+       brackets + a mono filename caption, matching the PCB language. */
+    .whoami__photo {
+      position: relative;
+      flex: 0 0 auto;
+      width: clamp(190px, 24vw, 280px);
+      margin: 0;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: linear-gradient(180deg, var(--surface), #0e1626);
+      box-shadow: 0 18px 40px -28px #000, 0 0 22px -14px var(--cyan);
+    }
+    .whoami__photo img {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      border-radius: 2px;
+      filter: contrast(1.03) saturate(0.96);
+    }
+    .whoami__photo::before,
+    .whoami__photo::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--cyan);
+      opacity: 0.85;
+    }
+    .whoami__photo::before { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }
+    .whoami__photo::after { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
+    .whoami__caption {
+      margin: 0.6rem 0 0.15rem;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      color: var(--cyan);
+      opacity: 0.75;
+    }
+    @media (max-width: 640px) {
+      .whoami__layout { flex-direction: column; align-items: stretch; }
+      .whoami__photo { width: clamp(180px, 60vw, 230px); align-self: flex-start; }
+    }
 
     /* ================================================================
        Footer
@@ -1132,7 +1320,7 @@
         gap: clamp(2rem, 7vw, 3rem);
         align-items: start;
       }
-      .hero__inner { max-width: none; }
+      .hero__inner { max-width: none; width: auto; margin-left: 0; }
       .timeline__inner { padding-left: 56px; }
       .node, .node--left, .node--right {
         width: 100%;
@@ -1275,6 +1463,18 @@
         <svg class="tree" aria-label="Career timeline — PCB circuit diagram" role="img"></svg>
         <ol class="timeline__nodes" id="timelineNodes"></ol>
       </div>
+
+      <!-- future milestone — the bus fades out, a dashed connector reaches a
+           locked "next objective" ghost chip. Purely decorative. -->
+      <div class="future" aria-hidden="true">
+        <span class="future__rail"></span>
+        <div class="future__node">
+          <div class="future__card">
+            <p class="future__status">// pipeline: building_next_stage...</p>
+            <p class="future__title" data-text="[ NEXT OBJECTIVE LOCKED ]">[ NEXT OBJECTIVE LOCKED ]<span class="future__cursor">█</span></p>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -1301,13 +1501,19 @@
         <p class="section__title">// whoami</p>
         <h2 class="section__heading">The person behind the CV.</h2>
       </div>
-      <div class="whoami__body reveal">
-        <p>
-          Hi, for me, technology is not just a profession, but a genuine <strong>passion</strong>. I am committed to continuous growth, striving to become a better version of myself every single day. I constantly set ambitious goals that go beyond standard project scopes, which keeps me engaged and pushes me to consistently raise the bar. Outside of work, I am individual which enjoys <strong>bouldering</strong>, <strong>gym training</strong>, and <strong>running</strong>.
-        </p>
-        <p>
-           When I’m indoors, you’ll likely find me gaming or diving deep into new, emerging technologies.
-        </p>
+      <div class="whoami__layout reveal">
+        <figure class="whoami__photo">
+          <img src="1.jpg" alt="Portrait of Dominik Kuliński" loading="lazy" />
+          <figcaption class="whoami__caption">// ~/dominik.jpg</figcaption>
+        </figure>
+        <div class="whoami__body">
+          <p>
+            Hi, for me, technology is not just a profession, but a genuine <strong>passion</strong>. I am committed to continuous growth, striving to become a better version of myself every single day. I constantly set ambitious goals that go beyond standard project scopes, which keeps me engaged and pushes me to consistently raise the bar. Outside of work, I am individual which enjoys <strong>bouldering</strong>, <strong>gym training</strong>, and <strong>running</strong>.
+          </p>
+          <p>
+             When I’m indoors, you’ll likely find me gaming or diving deep into new, emerging technologies.
+          </p>
+        </div>
       </div>
     </div>
   </section>
@@ -1316,7 +1522,7 @@
   <footer class="footer">
     <div class="container">
       <ul class="footer__links">
-        <li><a href="Dominik_CV_2026.pdf" download>CV</a></li>
+        <li><a href="CV_Dominik_Kulinski_Devops_2026.pdf" download>CV</a></li>
         <li><a href="mailto:dkulinski2000@gmail.com">email</a></li>
         <li>
           <a
@@ -1775,6 +1981,10 @@
           const dir = k % 2 === 0 ? -1 : 1;
           runX.push(trunkX + dir * jogMax * (0.55 + rand(k * 7 + 3) * 0.45));
         }
+        // the bus settles back to dead-centre on its final run so the "future"
+        // fade-out rail (centred via CSS, just below the timeline) continues it
+        // seamlessly instead of meeting an off-centre jog.
+        if (runX.length) runX[runX.length - 1] = trunkX;
         const spineXAt = (y) => {
           let k = 0;
           while (k < jogYs.length && y > jogYs[k]) k++;
